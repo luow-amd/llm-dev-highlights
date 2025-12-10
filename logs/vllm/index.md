@@ -12,13 +12,15 @@ Below are the daily development reports for the vLLM project, sorted by date (ne
 ## Reports
 
 <ul>
-  {% assign reports = site.pages | where_exp: "item", "item.path contains 'logs/vllm/daily/'" | sort: 'date' | reverse %}
-  {% for report in reports %}
+  {% assign all_pages = site.pages | sort: 'date' | reverse %}
+  {% for page in all_pages %}
+    {% if page.path contains 'logs/vllm/daily/' and page.path contains '.md' and page.date %}
     <li>
-      <a href="{{ report.url | relative_url }}">{{ report.date | date: "%Y-%m-%d" }}</a>
+      <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
       <span style="color: #888; font-size: 0.9em; margin-left: 10px;">
-        {{ report.title }}
+        - {{ page.date | date: "%Y-%m-%d" }}
       </span>
     </li>
+    {% endif %}
   {% endfor %}
 </ul>
