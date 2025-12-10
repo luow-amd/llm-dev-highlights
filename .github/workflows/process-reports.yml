@@ -6,6 +6,10 @@ on:
       - 'logs/vllm/daily/*.md'
   workflow_dispatch:
 
+concurrency:
+  group: pages-deployment
+  cancel-in-progress: true
+
 jobs:
   add-front-matter:
     runs-on: ubuntu-latest
