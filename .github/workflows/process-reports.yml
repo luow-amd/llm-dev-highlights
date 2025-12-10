@@ -1,0 +1,66 @@
+name: Process Daily Reports
+
+on:
+  push:
+    paths:
+      - 'logs/vllm/daily/*.md'
+  workflow_dispatch:
+
+jobs:
+  add-front-matter:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Process Markdown Files
+        run: |
+          # Detect changed markdown files in the specific directory
+          # We check both HEAD (for push) and all files (manual trigger safe-guard if needed, but let's stick to diff for now)
+          
+          # Use git diff to find added or modified files in the latest commit
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep 'logs/vllm/daily/.*\.md' || true)
+          
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No relevant markdown files changed."
+            # Fallback: Check if we manually triggered or if it's the first commit, scan all?
+            # For robustness, let's scan all files in that dir that don't have front matter.
+            # This is safer/idempotent.
+            echo "Scanning all files in logs/vllm/daily/ for missing front matter..."
+            FILES=$(find logs/vllm/daily -name "*.md")
+          else
+            echo "Processing changed files: $CHANGED_FILES"
+            FILES="$CHANGED_FILES"
+          fi
+          
+          MODIFIED=false
+          for file in $FILES; do
+             if [ -f "$file" ]; then
+                # Check for Front Matter start
+                if ! head -n 1 "$file" | grep -q "^---"; then
+                   echo "Processing $file..."
+                   python3 .github/scripts/add_front_matter.py "$file"
+                   MODIFIED=true
+                fi
+             fi
+          done
+          
+          if [ "$MODIFIED" = true ]; then
+             git config user.name "github-actions[bot]"
+             git config user.email "github-actions[bot]@users.noreply.github.com"
+             git add logs/vllm/daily/*.md
+             git commit -m "Auto-add front matter for GitHub Pages"
+             git push
+          else
+             echo "No files needed update."
+          fi
