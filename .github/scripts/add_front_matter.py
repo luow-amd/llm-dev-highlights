@@ -43,8 +43,9 @@ def process_file(file_path):
 title: {title}
 date: {date_str}
 layout: default
+---
 
-[<< Back to Home]({{{{ site.baseurl }}}}/)
+[<< Back to vLLM Reports]({{{{ site.baseurl }}}}/logs/vllm/)
 
 """
         new_content = front_matter + content

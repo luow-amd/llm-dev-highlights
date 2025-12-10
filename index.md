@@ -5,18 +5,8 @@ title: Home
 
 # LLM Dev Highlights
 
-Welcome to the LLM Dev Highlights. Below are the daily development reports.
+Welcome to the LLM Dev Highlights. Below are the daily development reports for various LLM projects.
 
-## vLLM Reports
+## Projects
 
-<ul>
-  {% assign reports = site.pages | where_exp: "item", "item.path contains 'logs/vllm/daily/'" | sort: 'date' | reverse %}
-  {% for report in reports %}
-    <li>
-      <a href="{{ report.url | relative_url }}">{{ report.title | default: report.name }}</a>
-      <span style="color: #888; font-size: 0.85em; margin-left: 10px;">
-        {{ report.date | date: "%Y-%m-%d" }}
-      </span>
-    </li>
-  {% endfor %}
-</ul>
+- [vLLM Daily Reports](logs/vllm/) - Daily development highlights for the vLLM project
