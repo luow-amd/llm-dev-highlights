@@ -63,7 +63,7 @@ jobs:
              git config user.name "github-actions[bot]"
              git config user.email "github-actions[bot]@users.noreply.github.com"
              git add logs/vllm/daily/*.md
-             git commit -m "Auto-add front matter for GitHub Pages"
+             git commit -m "Auto-add front matter for GitHub Pages [skip ci]"
              git push
           else
              echo "No files needed update."
