@@ -4,6 +4,10 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Process Daily Reports"]
+    types:
+      - completed
 
 permissions:
   contents: read
@@ -20,6 +24,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+            ref: main
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
