@@ -24,3 +24,14 @@ Below are the daily development reports for the vLLM project, sorted by date (ne
     {% endif %}
   {% endfor %}
 </ul>
+
+<hr>
+<h3>Debug Info (Temporary)</h3>
+<pre>
+All pages found:
+{% for page in site.pages %}
+- Path: {{ page.path }}
+  Date: {{ page.date }}
+  Title: {{ page.title }}
+{% endfor %}
+</pre>
